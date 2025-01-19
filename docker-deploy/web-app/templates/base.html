@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ride Sharing Service</title>
+</head>
+<body>
+<h1> Ride Sharing Service</h1>
+{% if user.is_authenticated %}
+<div>Welcome! {{user.username}}!</div>
+<div><a href="{% url 'user:logout' %}">Log out</a> </div>
+{% else %}
+<div><a href="{% url 'user:login' %}">Log in</a></div>
+<div><a href="{% url 'user:register' %}">Register</a></div>
+{% endif %}
+</body>
+</html>
