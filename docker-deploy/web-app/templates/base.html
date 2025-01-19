@@ -8,6 +8,7 @@
 <h1> Ride Sharing Service</h1>
 {% if user.is_authenticated %}
 <div>Welcome! {{user.username}}!</div>
+<div>Want to be driver? <a href="{% url 'user:register_driver' %}">Click here!</a> </div>
 <div><a href="{% url 'user:logout' %}">Log out</a> </div>
 {% else %}
 <div><a href="{% url 'user:login' %}">Log in</a></div>

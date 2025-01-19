@@ -2,7 +2,7 @@ from django.contrib.auth import login
 from django.shortcuts import render, redirect, reverse, HttpResponse
 from .forms import RegisterForm, LoginForm
 from django.views.decorators.http import require_http_methods
-from django.contrib.auth.models import User
+from .models import RSSUser
 
 # Create your views here.
 @require_http_methods(['GET', 'POST'])
@@ -16,7 +16,7 @@ def register_view(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('pwd2')
-            User.objects.create_user(username=username, password=password)
+            RSSUser.objects.create_user(username=username, password=password)
             return redirect(reverse('user:login'))
         else:
             print(form.errors.get_json_data())
@@ -33,7 +33,7 @@ def login_view(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('pwd')
             remember = form.cleaned_data.get('remember')
-            user = User.objects.filter(username=username).first()
+            user = RSSUser.objects.filter(username=username).first()
             if user and user.check_password(password):
                 # login
                 login(request, user)
@@ -46,9 +46,12 @@ def login_view(request):
                 return render(request, 'user/login.html', context={'form' : form, 'form_error': form.errors.get_json_data()})
 
 def logout_view(request):
-    user = User.objects.first()
+    user = RSSUser.objects.first()
     if user.is_authenticated:
         request.session.flush()
         return redirect(reverse('index'))
     else:
         return redirect(reverse('index'))
+
+def register_driver_view(request):
+    return redirect(reverse('index'))
