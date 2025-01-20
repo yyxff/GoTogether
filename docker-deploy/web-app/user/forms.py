@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from pkg_resources import require
+from .models import CarModel
 
 User = get_user_model()
 
@@ -53,3 +53,20 @@ class DriverRegisterForm(forms.Form):
     max_passenger = forms.IntegerField(label='Maximum Number of Passengers')
     sp_info = forms.CharField(widget=forms.Textarea, label='Special Vehicle Info', required=False)
 
+    def clean_max_passenger(self):
+        max_passenger = self.cleaned_data.get('max_passenger')
+        if max_passenger <= 0:
+            raise forms.ValidationError('Number of maximum passenger should not be non-positive number.')
+        else:
+            return max_passenger
+
+class CarForm(forms.ModelForm):
+    class Meta:
+        model = CarModel
+        fields = '__all__'
+    def clean_max_passenger(self):
+        max_passenger = self.cleaned_data.get('max_passenger')
+        if max_passenger <= 0:
+            raise forms.ValidationError('Number of maximum passenger should not be non-positive number.')
+        else:
+            return max_passenger

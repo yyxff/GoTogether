@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Change User Info</title>
+</head>
+<body>
+<h1>User Info</h1>
+    {% if is_success %}
+    Save cars info success.
+    {% endif %}
+    <form action="" method="POST">
+        {% for form in forms %}
+            Car No.{{ forloop.counter }} Info:
+            {% csrf_token %}
+            {{ forms.management_form }}
+            {{ form.as_p }}
+        {% endfor %}
+        <div>
+            <input type="submit" value="Save">
+        </div>
+    </form>
+<!--Go back to index-->
+<button type="button" onclick="window.location.href='{% url 'index' %}'">戻る</button>
+</body>
+</html>

@@ -1,6 +1,9 @@
+from http.client import responses
+
 from django.contrib.auth import login, logout
+from django.forms import modelformset_factory
 from django.shortcuts import render, redirect, reverse, HttpResponse
-from .forms import RegisterForm, LoginForm, DriverRegisterForm
+from .forms import RegisterForm, LoginForm, DriverRegisterForm, CarForm
 from django.views.decorators.http import require_http_methods
 from .models import RSSUser, CarModel
 
@@ -19,8 +22,7 @@ def register_view(request):
             RSSUser.objects.create_user(username=username, password=password)
             return redirect(reverse('user:login'))
         else:
-            print(form.errors.get_json_data())
-            return redirect('user:register')
+            return redirect(reverse('user:register'))
 
 @require_http_methods(['GET', 'POST'])
 def login_view(request):
@@ -40,14 +42,14 @@ def login_view(request):
                 # if not remember
                 if not remember:
                     request.session.set_expiry(0)
-                return redirect('/')
+                return redirect(reverse('index'))
             else:
                 form.add_error('username', 'Username or password error.')
                 return render(request, 'user/login.html', context={'form' : form, 'form_error': form.errors.get_json_data()})
 
 def logout_view(request):
     logout(request)
-    return redirect('index')
+    return redirect(reverse('index'))
 
 @require_http_methods(['GET', 'POST'])
 def register_driver_view(request):
@@ -75,6 +77,27 @@ def register_driver_view(request):
                                     max_passenger=max_passenger,
                                     sp_info=sp_info)
             user.save()
-            # TODO: add fields into user
-            return redirect('index')
+            return redirect(reverse('index'))
+        else:
+            form_error = form.errors.get_json_data()
+            return render(request, 'user/driver_register.html', context={'form': form, 'form_error': form_error})
 
+@require_http_methods(['GET', 'POST'])
+def revise_car_view(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse('index'))
+    CarFormSet = modelformset_factory(CarModel,
+                                      form=CarForm,
+                                      fields=('vehicle_type', 'vehicle_number', 'max_passenger', 'sp_info'),
+                                      extra=0)
+    cars = CarModel.objects.filter(user=request.user)
+    if request.method == 'GET':
+        formset = CarFormSet(queryset=cars)
+        return render(request, 'user/user_info.html', context={'forms': formset})
+    else:
+        formset = CarFormSet(request.POST, queryset=cars)
+        if formset.is_valid():
+            formset.save()
+            return render(request, 'user/user_info.html', context={'forms': formset, 'is_success': True})
+        else:
+            return render(request, 'user/user_info.html', context={'forms': formset, 'is_success': False})

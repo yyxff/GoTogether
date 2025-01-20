@@ -10,10 +10,7 @@
     <!-- csrf_token call -->
     {% csrf_token %}
         <!-- call Django form -->
-        {{ form }}
-    {% if error_form %}
-        {{error_form}}
-    {% endif %}
+        {{ form.as_p }}
     <input type="submit" value="Log in">
 </form>
 
