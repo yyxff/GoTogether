@@ -5,10 +5,10 @@ from user.models import RSSUser
 
 class RSSAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('is_driver',)}),  # 在后台显示 is_driver 字段
+        (None, {'fields': ('is_driver', 'vehicle_type', 'vehicle_number', 'max_passenger', 'sp_info')}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('is_driver',)}),  # 在创建用户时显示 is_driver 字段
+        (None, {'fields': ('is_driver',)}),
     )
 
 

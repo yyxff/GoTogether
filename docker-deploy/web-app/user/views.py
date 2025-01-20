@@ -1,6 +1,6 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect, reverse, HttpResponse
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, DriverRegisterForm
 from django.views.decorators.http import require_http_methods
 from .models import RSSUser
 
@@ -46,12 +46,34 @@ def login_view(request):
                 return render(request, 'user/login.html', context={'form' : form, 'form_error': form.errors.get_json_data()})
 
 def logout_view(request):
-    user = RSSUser.objects.first()
-    if user.is_authenticated:
-        request.session.flush()
-        return redirect(reverse('index'))
-    else:
-        return redirect(reverse('index'))
+    logout(request)
+    return redirect('index')
 
+@require_http_methods(['GET', 'POST'])
 def register_driver_view(request):
-    return redirect(reverse('index'))
+    if request.method == 'GET':
+        form = DriverRegisterForm()
+        return render(request, 'user/driver_register.html', context={'form': form})
+    else:
+        form = DriverRegisterForm(request.POST)
+        if form.is_valid():
+            # get post data
+            vehicle_type = form.cleaned_data.get('vehicle_type')
+            vehicle_number = form.cleaned_data.get('vehicle_number')
+            max_passenger = form.cleaned_data.get('max_passenger')
+            sp_info = form.cleaned_data.get('sp_info')
+
+            # TODO: Model and ForeignKey
+            # get user
+            user = request.user
+
+            # set user info
+            user.is_driver = True
+            user.vehicle_type = vehicle_type
+            user.vehicle_number = vehicle_number
+            user.max_passenger = max_passenger
+            user.sp_info = sp_info
+            user.save()
+            # TODO: add fields into user
+            return redirect('index')
+

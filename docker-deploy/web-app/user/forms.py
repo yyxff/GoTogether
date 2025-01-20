@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from pkg_resources import require
 
 User = get_user_model()
 
@@ -45,3 +46,10 @@ class LoginForm(forms.Form):
         'required' : 'Please enter user name.'})
     pwd = forms.CharField(max_length=20, min_length=6, label='Password')
     remember = forms.BooleanField(required=False)
+
+class DriverRegisterForm(forms.Form):
+    vehicle_type = forms.CharField(max_length=100, label='Vehicle Type')
+    vehicle_number = forms.CharField(max_length=100, label='License Plate Number')
+    max_passenger = forms.IntegerField(label='Maximum Number of Passengers')
+    sp_info = forms.CharField(widget=forms.Textarea, label='Special Vehicle Info', required=False)
+
