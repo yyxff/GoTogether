@@ -7,12 +7,18 @@
 <body>
 <h1>Login Page</h1>
 <form action="" method="post">
+    <!-- csrf_token call -->
     {% csrf_token %}
+        <!-- call Django form -->
         {{ form }}
     {% if error_form %}
         {{error_form}}
     {% endif %}
     <input type="submit" value="Log in">
 </form>
+
+<!--Go back to index-->
+<button type="button" onclick="window.location.href='{% url 'index' %}'">戻る</button>
+
 </body>
 </html>

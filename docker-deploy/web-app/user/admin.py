@@ -5,7 +5,7 @@ from user.models import RSSUser
 
 class RSSAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('is_driver', 'vehicle_type', 'vehicle_number', 'max_passenger', 'sp_info')}),
+        (None, {'fields': ('is_driver',)}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
         (None, {'fields': ('is_driver',)}),

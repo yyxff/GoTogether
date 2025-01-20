@@ -6,24 +6,59 @@
 </head>
 <body>
 <h1> Ride Sharing Service</h1>
+<!--if user logged in-->
 {% if user.is_authenticated %}
 <div>Welcome! {{user.username}}!</div>
 
+<!--if user not driver-->
 {% if not user.is_driver %}
-<div>Want to be driver? <a href="{% url 'user:register_driver' %}">Click Here!</a> </div>
+<div>Want to be driver? <button type="button" onclick="window.location.href='{% url 'user:register_driver' %}'">Click here</button> </div>
+
+<!--if user is driver-->
 {% else %}
-<!--temporarily show one car-->
-<!--TODO: add ModelForm (model = carModel)-->
+<!--show cars info-->
 <div>Here's your cars info:</div>
+<table>
+    <thead>
+    <tr>
+        <th>No.</th>
+        <th>Vehicle Type</th>
+        <th>Vehicle Number</th>
+        <th>Maximum Passenger</th>
+        <th>Special Vehicle Info</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for car in cars %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ car.vehicle_type }}</td>
+        <td>{{ car.vehicle_number }}</td>
+        <td>{{ car.max_passenger }}</td>
+        <td>{{ car.sp_info }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
-
-<div>Has another car? Click Here!(not implemented)</div>
+<div>Has another car to register? <button type="button" onclick="window.location.href='{% url 'user:register_driver' %}'">Click here</button></div>
 {% endif %}
-
-<div><a href="{% url 'user:logout' %}">Log out</a> </div>
+<!--Logout button-->
+<div>
+    <button type="button" onclick="window.location.href='{% url 'user:logout' %}'">Sign out</button>
+</div>
 {% else %}
-<div><a href="{% url 'user:login' %}">Log in</a></div>
-<div><a href="{% url 'user:register' %}">Register</a></div>
+<!--Login button-->
+<div>
+    Already have an RSS account?
+    <button type="button" onclick="window.location.href='{% url 'user:login' %}'">Sign in</button>
+</div>
+
+<!--Register button-->
+<div>
+    Want to be a member?
+    <button type="button" onclick="window.location.href='{% url 'user:register' %}'">Sign up</button>
+</div>
 {% endif %}
 </body>
 </html>

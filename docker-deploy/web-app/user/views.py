@@ -2,7 +2,7 @@ from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect, reverse, HttpResponse
 from .forms import RegisterForm, LoginForm, DriverRegisterForm
 from django.views.decorators.http import require_http_methods
-from .models import RSSUser
+from .models import RSSUser, CarModel
 
 # Create your views here.
 @require_http_methods(['GET', 'POST'])
@@ -69,10 +69,11 @@ def register_driver_view(request):
 
             # set user info
             user.is_driver = True
-            user.vehicle_type = vehicle_type
-            user.vehicle_number = vehicle_number
-            user.max_passenger = max_passenger
-            user.sp_info = sp_info
+            cars = CarModel.objects.create(user=user,
+                                    vehicle_type=vehicle_type,
+                                    vehicle_number=vehicle_number,
+                                    max_passenger=max_passenger,
+                                    sp_info=sp_info)
             user.save()
             # TODO: add fields into user
             return redirect('index')
