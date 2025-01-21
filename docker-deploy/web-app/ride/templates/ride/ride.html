@@ -37,9 +37,15 @@
                     <td>{{ ride.sp_info }}</td>
                     <td>{{ ride.is_confirmed|yesno:"Yes,No" }}</td>
 
+                    {% if not ride.is_confirmed %}
                     <td>
                         <a href="{% url 'index'%}" class="btn btn-primary btn-sm">Revise</a>
                     </td>
+                    {% else %}
+                    <td>
+                        <button class="btn btn-secondary btn-sm" disabled>Revise</button>
+                    </td>
+                    {% endif %}
                 </tr>
                 {% empty %}
                 <tr>

@@ -15,3 +15,11 @@ class NewRideForm(forms.ModelForm):
             'vehicle_type': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter expected vehicle type (Optional)'}),
             'sp_info': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter special requirements (Optional)', 'style':'height:38px'}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        is_confirmed = cleaned_data.get('is_confirmed')
+        if is_confirmed:
+            raise forms.ValidationError('You cannot revise a confirmed ride.')
+        else:
+            return cleaned_data

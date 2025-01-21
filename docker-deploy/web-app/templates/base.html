@@ -4,32 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ride Sharing Service</title>
-    <!-- 引入 Bootstrap CSS -->
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <!-- 頁面標題 -->
+        <!-- title -->
         <div class="text-center mb-4">
             <h1 class="display-4">Ride Sharing Service</h1>
         </div>
 
-        <!-- 如果用戶已認證 -->
+        <!-- if user authenticated -->
         {% if user.is_authenticated %}
         <div class="alert alert-success text-center">
             Welcome to RSS website, <strong>{{ user.username }}</strong>!
         </div>
 
-        <!-- 如果用戶不是司機 -->
+        <!-- if user is not driver -->
         {% if not user.is_driver %}
         <div class="alert alert-info text-center">
             Want to be a driver?
             <button class="btn btn-primary btn-sm" onclick="window.location.href='{% url 'user:register_driver' %}'">Click here</button>
         </div>
 
-        <!-- 如果用戶是司機 -->
+        <!-- if user is driver -->
         {% else %}
-        <!-- 顯示車輛信息 -->
+        <!-- view cars -->
         <div class="mt-4">
             <h3>Your Cars Info:</h3>
             <table class="table table-bordered table-striped mt-3">
@@ -55,7 +55,7 @@
                 </tbody>
             </table>
 
-            <!-- 註冊新車輛按鈕 -->
+            <!-- register car -->
             <div class="text-center mt-3">
                 Has another car to register?
                 <button class="btn btn-warning btn-sm" onclick="window.location.href='{% url 'user:register_driver' %}'" style="margin-right: 20px;">Click here</button>
@@ -65,37 +65,37 @@
         </div>
         {% endif %}
 
-        <!-- 新建共享行程按鈕 -->
+        <!-- create rides -->
         <div class="text-center mt-4">
             New share ride:
             <button class="btn btn-info btn-sm" onclick="window.location.href='{% url 'ride:new_ride' %}'">Request</button>
         </div>
 
-        <!-- 查看行程請求按鈕 -->
+        <!-- view rides -->
         <div class="text-center mt-3">
             View ride requests:
-            <button class="btn btn-info btn-sm" onclick="window.location.href='{% url 'index' %}'">View</button>
+            <button class="btn btn-info btn-sm" onclick="window.location.href='{% url 'ride:view_ride' %}'">View</button>
         </div>
 
-        <!-- 登出按鈕 -->
+        <!-- log out -->
         <div class="text-center mt-4">
             <button class="btn btn-danger btn-sm" onclick="window.location.href='{% url 'user:logout' %}'">Sign out</button>
         </div>
 
         {% else %}
 
-        <!-- 未登錄用戶歡迎信息 -->
+        <!-- not authenticated user -->
         <div class="alert alert-info text-center">
             Welcome to RSS website.
         </div>
 
-        <!-- 登錄按鈕 -->
+        <!-- login -->
         <div class="text-center mt-3">
             Already have an RSS account?
             <button class="btn btn-primary btn-sm" onclick="window.location.href='{% url 'user:login' %}'">Sign in</button>
         </div>
 
-        <!-- 註冊按鈕 -->
+        <!-- register -->
         <div class="text-center mt-3">
             Want to be a member?
             <button class="btn btn-success btn-sm" onclick="window.location.href='{% url 'user:register' %}'">Sign up</button>
@@ -104,7 +104,7 @@
         {% endif %}
     </div>
 
-    <!-- 引入 Bootstrap JS 和依賴庫（可選） -->
+    <!-- bootstrap -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
