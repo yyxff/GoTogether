@@ -10,6 +10,8 @@ from .models import RSSUser, CarModel
 # Create your views here.
 @require_http_methods(['GET', 'POST'])
 def register_view(request):
+    if request.user.is_authenticated:
+        return redirect(reverse('index'))
     if request.method == 'GET':
         form = RegisterForm()
         context = {'form': form}
@@ -53,6 +55,8 @@ def logout_view(request):
 
 @require_http_methods(['GET', 'POST'])
 def register_driver_view(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse('user:login'))
     if request.method == 'GET':
         form = DriverRegisterForm()
         return render(request, 'user/driver_register.html', context={'form': form})
@@ -85,7 +89,7 @@ def register_driver_view(request):
 @require_http_methods(['GET', 'POST'])
 def revise_car_view(request):
     if not request.user.is_authenticated:
-        return redirect(reverse('index'))
+        return redirect(reverse('user:login'))
     CarFormSet = modelformset_factory(CarModel,
                                       form=CarForm,
                                       fields=('vehicle_type', 'vehicle_number', 'max_passenger', 'sp_info'),

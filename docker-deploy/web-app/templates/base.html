@@ -6,9 +6,9 @@
 </head>
 <body>
 <h1> Ride Sharing Service</h1>
-<!--if user logged in-->
+<!--if user is authenticated-->
 {% if user.is_authenticated %}
-<div>Welcome! {{user.username}}!</div>
+<div>Welcome, {{user.username}}!</div>
 
 <!--if user not driver-->
 {% if not user.is_driver %}
@@ -17,7 +17,9 @@
 <!--if user is driver-->
 {% else %}
 <!--show cars info-->
+<br>
 <div>Here's your cars info:</div>
+<br>
 <table>
     <thead>
     <tr>
@@ -40,10 +42,16 @@
     {% endfor %}
     </tbody>
 </table>
-
 <div>Has another car to register? <button type="button" onclick="window.location.href='{% url 'user:register_driver' %}'">Click here</button></div>
 <div>Wrong information? <button type="button" onclick="window.location.href='{% url 'user:revise_info' %}'">Revise</button></div>
 {% endif %}
+<br>
+<!--if user is authenticated-->
+<div>New share ride: <button type="button" onclick="window.location.href='{% url 'ride:new_ride' %}'">Request</button></div>
+<br>
+<div>View ride requests: <button type="button" onclick="window.location.href='{% url 'index' %}'">View</button></div>
+<br>
+<br>
 
 <!--Logout button-->
 <div>
