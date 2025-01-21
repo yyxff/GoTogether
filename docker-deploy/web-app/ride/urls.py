@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from RSS.views import index_view
 app_name = 'ride'
 
 urlpatterns = [

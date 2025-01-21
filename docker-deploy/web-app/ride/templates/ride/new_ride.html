@@ -4,12 +4,24 @@
     <meta charset="UTF-8">
     <title>New Ride Request</title>
 </head>
+
 <body>
-<h1>New Ride Request Form</h1>
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-</form>
+    <h1>New Ride Request Form</h1>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit"></input>
+    </form>
+
+    <script>
+        // if POST check SUCCESS
+        {% if success %}
+        alert("Submit success!");
+        // redirect url
+        // TODO: ride:list
+        window.location.href = "{% url 'index' %}";
+        {% endif %}
+    </script>
 <button type="button" onclick="window.location.href='{% url 'index' %}'">戻る</button>
 </body>
 </html>

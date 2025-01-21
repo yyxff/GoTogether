@@ -69,7 +69,6 @@ def register_driver_view(request):
             max_passenger = form.cleaned_data.get('max_passenger')
             sp_info = form.cleaned_data.get('sp_info')
 
-            # TODO: Model and ForeignKey
             # get user
             user = request.user
 
