@@ -34,3 +34,7 @@ def new_ride_view(request):
             return render(request, 'ride/new_ride.html', context={'form': form, 'success': True})
         else:
             return render(request, 'ride/new_ride.html', context={'form': form, 'success': False})
+
+def ride_view(request):
+    rides = RideModel.objects.filter(owner__exact=request.user)
+    return render(request, 'ride/ride.html', context={'my_rides':rides})

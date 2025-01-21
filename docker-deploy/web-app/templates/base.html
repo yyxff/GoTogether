@@ -2,75 +2,111 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ride Sharing Service</title>
+    <!-- 引入 Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-<h1> Ride Sharing Service</h1>
-<!--if user is authenticated-->
-{% if user.is_authenticated %}
-<div>Welcome, {{user.username}}!</div>
+<body class="bg-light">
+    <div class="container mt-5">
+        <!-- 頁面標題 -->
+        <div class="text-center mb-4">
+            <h1 class="display-4">Ride Sharing Service</h1>
+        </div>
 
-<!--if user not driver-->
-{% if not user.is_driver %}
-<div>Want to be driver? <button type="button" onclick="window.location.href='{% url 'user:register_driver' %}'">Click here</button> </div>
+        <!-- 如果用戶已認證 -->
+        {% if user.is_authenticated %}
+        <div class="alert alert-success text-center">
+            Welcome to RSS website, <strong>{{ user.username }}</strong>!
+        </div>
 
-<!--if user is driver-->
-{% else %}
-<!--show cars info-->
-<br>
-<div>Here's your cars info:</div>
-<br>
-<table>
-    <thead>
-    <tr>
-        <th>No.</th>
-        <th>Vehicle Type</th>
-        <th>Vehicle Number</th>
-        <th>Maximum Passenger</th>
-        <th>Special Vehicle Info</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for car in cars %}
-    <tr>
-        <td>{{ forloop.counter }}</td>
-        <td>{{ car.vehicle_type }}</td>
-        <td>{{ car.vehicle_number }}</td>
-        <td>{{ car.max_passenger }}</td>
-        <td>{{ car.sp_info }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-<div>Has another car to register? <button type="button" onclick="window.location.href='{% url 'user:register_driver' %}'">Click here</button></div>
-<div>Wrong information? <button type="button" onclick="window.location.href='{% url 'user:revise_info' %}'">Revise</button></div>
-{% endif %}
-<br>
-<!--if user is authenticated-->
-<div>New share ride: <button type="button" onclick="window.location.href='{% url 'ride:new_ride' %}'">Request</button></div>
-<br>
-<div>View ride requests: <button type="button" onclick="window.location.href='{% url 'index' %}'">View</button></div>
-<br>
-<br>
+        <!-- 如果用戶不是司機 -->
+        {% if not user.is_driver %}
+        <div class="alert alert-info text-center">
+            Want to be a driver?
+            <button class="btn btn-primary btn-sm" onclick="window.location.href='{% url 'user:register_driver' %}'">Click here</button>
+        </div>
 
-<!--Logout button-->
-<div>
-    <button type="button" onclick="window.location.href='{% url 'user:logout' %}'">Sign out</button>
-</div>
-{% else %}
+        <!-- 如果用戶是司機 -->
+        {% else %}
+        <!-- 顯示車輛信息 -->
+        <div class="mt-4">
+            <h3>Your Cars Info:</h3>
+            <table class="table table-bordered table-striped mt-3">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>No.</th>
+                        <th>Vehicle Type</th>
+                        <th>Vehicle Number</th>
+                        <th>Maximum Passenger</th>
+                        <th>Special Vehicle Info</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for car in cars %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ car.vehicle_type }}</td>
+                        <td>{{ car.vehicle_number }}</td>
+                        <td>{{ car.max_passenger }}</td>
+                        <td>{{ car.sp_info }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-<div>Welcome to RSS website.</div>
-<!--Login button-->
-<div>
-    Already have an RSS account?
-    <button type="button" onclick="window.location.href='{% url 'user:login' %}'">Sign in</button>
-</div>
+            <!-- 註冊新車輛按鈕 -->
+            <div class="text-center mt-3">
+                Has another car to register?
+                <button class="btn btn-warning btn-sm" onclick="window.location.href='{% url 'user:register_driver' %}'" style="margin-right: 20px;">Click here</button>
+                Wrong information?
+                <button class="btn btn-warning btn-sm" onclick="window.location.href='{% url 'user:revise_info' %}'">Revise</button>
+            </div>
+        </div>
+        {% endif %}
 
-<!--Register button-->
-<div>
-    Want to be a member?
-    <button type="button" onclick="window.location.href='{% url 'user:register' %}'">Sign up</button>
-</div>
-{% endif %}
+        <!-- 新建共享行程按鈕 -->
+        <div class="text-center mt-4">
+            New share ride:
+            <button class="btn btn-info btn-sm" onclick="window.location.href='{% url 'ride:new_ride' %}'">Request</button>
+        </div>
+
+        <!-- 查看行程請求按鈕 -->
+        <div class="text-center mt-3">
+            View ride requests:
+            <button class="btn btn-info btn-sm" onclick="window.location.href='{% url 'index' %}'">View</button>
+        </div>
+
+        <!-- 登出按鈕 -->
+        <div class="text-center mt-4">
+            <button class="btn btn-danger btn-sm" onclick="window.location.href='{% url 'user:logout' %}'">Sign out</button>
+        </div>
+
+        {% else %}
+
+        <!-- 未登錄用戶歡迎信息 -->
+        <div class="alert alert-info text-center">
+            Welcome to RSS website.
+        </div>
+
+        <!-- 登錄按鈕 -->
+        <div class="text-center mt-3">
+            Already have an RSS account?
+            <button class="btn btn-primary btn-sm" onclick="window.location.href='{% url 'user:login' %}'">Sign in</button>
+        </div>
+
+        <!-- 註冊按鈕 -->
+        <div class="text-center mt-3">
+            Want to be a member?
+            <button class="btn btn-success btn-sm" onclick="window.location.href='{% url 'user:register' %}'">Sign up</button>
+        </div>
+
+        {% endif %}
+    </div>
+
+    <!-- 引入 Bootstrap JS 和依賴庫（可選） -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

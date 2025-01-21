@@ -24,7 +24,8 @@ def register_view(request):
             RSSUser.objects.create_user(username=username, password=password)
             return redirect(reverse('user:login'))
         else:
-            return redirect(reverse('user:register'))
+            context = {'form': form}
+            return render(request, 'user/register.html', context=context)
 
 @require_http_methods(['GET', 'POST'])
 def login_view(request):

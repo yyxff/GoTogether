@@ -2,25 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Change User Info</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h1>User Info</h1>
+<div class="container mt-5">
+    <!-- Header -->
+    <h1 class="text-center mb-4">User Info</h1>
+
+    <!-- Success Message -->
     {% if is_success %}
-    Save cars info success.
+    <div class="alert alert-success text-center" role="alert">
+        Save cars info success.
+    </div>
     {% endif %}
-    <form action="" method="POST">
+
+    <!-- Form -->
+    <form action="" method="POST" class="needs-validation" novalidate>
+        {% csrf_token %}
+        {{ forms.management_form }}
         {% for form in forms %}
-            Car No.{{ forloop.counter }} Info:
-            {% csrf_token %}
-            {{ forms.management_form }}
-            {{ form.as_p }}
+        <div class="card mb-3">
+            <div class="card-header">
+                Car No. {{ forloop.counter }} Info
+            </div>
+            <div class="card-body">
+                {{ form.as_p }}
+            </div>
+        </div>
         {% endfor %}
-        <div>
-            <input type="submit" value="Save">
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary" style="margin-right: 12px;">Save</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'index' %}'">戻る</button>
         </div>
     </form>
-<!--Go back to index-->
-<button type="button" onclick="window.location.href='{% url 'index' %}'">戻る</button>
+
+    <!-- Go Back Button -->
+    <div class="text-center mt-3">
+
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/[email protected]/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
