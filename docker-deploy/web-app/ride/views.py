@@ -31,7 +31,6 @@ def new_ride_view(request):
                                      vehicle_type=vehicle_type,
                                      sp_info=sp_info,
                                      owner=owner)
-            form.save()
             return render(request, 'ride/new_ride.html', context={'form': form, 'success': True})
         else:
             return render(request, 'ride/new_ride.html', context={'form': form, 'success': False})
