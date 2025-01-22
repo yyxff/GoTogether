@@ -1,3 +1,5 @@
+from traceback import print_tb
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, reverse
 from .forms import NewRideForm
@@ -42,3 +44,18 @@ def ride_view(request):
     return render(request, 'ride/ride.html', context={'my_rides':rides})
 
 # TODO: add a view for share ride form
+@login_required(login_url='/user/login/')
+@require_http_methods(['GET', 'POST'])
+def revise_ride_info(request, ride_id):
+    ride = RideModel.objects.get(pk=ride_id)
+    form = NewRideForm(instance=ride)
+    if request.method == 'GET':
+        return render(request, 'ride/revise_ride.html', context={'form': form, 'ride': ride})
+    else:
+        form = NewRideForm(request.POST, instance=ride)
+        if form.is_valid():
+            form.owner = request.user
+            form.save()
+            return render(request, 'ride/revise_ride.html', context={'form': form, 'success': True})
+        else:
+            return render(request, 'ride/revise_ride.html', context={'form': form, 'success': False})

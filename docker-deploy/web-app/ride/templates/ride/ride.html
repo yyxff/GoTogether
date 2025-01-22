@@ -83,7 +83,7 @@
                     {% if not ride.is_confirmed %}
                     <td>
                         <!-- Redirect to a ride revision page -->
-                        <a href="{% url 'index' %}" class="btn btn-primary btn-sm">Revise</a>
+                        <a href="{% url 'ride:revise_ride' ride.pk %}" class="btn btn-primary btn-sm">Revise</a>
                     </td>
                     {% else %}
                     <td>
