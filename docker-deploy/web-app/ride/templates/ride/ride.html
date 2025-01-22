@@ -43,7 +43,13 @@
 </head>
 <body>
     <div class="container table-container">
-        <h3>Your Rides</h3>
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>My Rides</h3>
+            <form class="form-inline" action="{% url 'ride:search_my_ride' %}">
+                <input name="q" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="margin-bottom: 20px;">
+                <button class="btn btn-outline-success" type="submit" style="margin-bottom: 20px;">Search</button>
+            </form>
+        </div>
         <table class="table table-bordered table-striped">
             <thead class="thead-dark">
                 <tr>
@@ -51,17 +57,16 @@
                     <th>Departure</th>
                     <th>Destination</th>
                     <th>Arrival Time</th>
-                    <th>Total Passengers</th>
-                    <th>Can Share</th>
-                    <th>Vehicle Type</th>
-                    <th>Special Info</th>
-                    <th>Is Confirmed</th>
+                    <th>Passengers</th>
+                    <th>Share</th>
+                    <th>Confirmed</th>
                     <th>Driver</th>
+                    <th>Details</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for ride in my_rides %}
+                {% for ride in rides %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ ride.departure }}</td>
@@ -75,8 +80,8 @@
                             <span class="text-danger">&#10007;</span>
                         {% endif %}
                     </td>
-                    <td>{{ ride.vehicle_type }}</td>
-                    <td>{{ ride.sp_info }}</td>
+<!--                    <td>{{ ride.vehicle_type }}</td>-->
+<!--                    <td>{{ ride.sp_info }}</td>-->
                     <td>
                         {% if ride.is_confirmed %}
                             <span class="text-success">&#10003;</span>
@@ -86,9 +91,20 @@
                     </td>
                     <td>{{ ride.driver.username }}</td>
 
+                    {% if ride.is_confirmed %}
+                    <td>
+<!--                        Details button to show detail-->
+                        <a href="{% url 'ride:ride_detail' ride.pk %}" class="btn btn-primary btn-sm">Show</a>
+                    </td>
+                    {% else %}
+                    <td>
+                        <button class="btn btn-secondary btn-sm" disabled>Show</button>
+                    </td>
+                    {% endif %}
+
                     {% if not ride.is_confirmed %}
                     <td>
-                        <!-- Redirect to a ride revision page -->
+<!--                        Redirect to a ride revision page-->
                         <a href="{% url 'ride:revise_ride' ride.pk %}" class="btn btn-primary btn-sm">Revise</a>
                     </td>
                     {% else %}
@@ -102,7 +118,9 @@
                 <tr>
                     <td colspan="10" class="text-center">
                         No rides found.
+                        {% if not is_search %}
                         <a href="{% url 'ride:new_ride' %}" class="badge alert-primary">Click here</a> to register a <strong>new Ride</strong>.
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

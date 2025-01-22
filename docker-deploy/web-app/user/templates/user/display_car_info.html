@@ -44,21 +44,25 @@
                     <th>Vehicle Number</th>
                     <th>Maximum Passenger</th>
                     <th>Special Vehicle Info</th>
+                    {% if not to_guest %}
                     <th>Actions</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
-                {% for car in request.user.cars.all %}
+                {% for car in cars %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ car.vehicle_type }}</td>
                     <td>{{ car.vehicle_number }}</td>
                     <td>{{ car.max_passenger }}</td>
                     <td>{{ car.sp_info }}</td>
+                    {% if not to_guest %}
                     <td>
                         <a href="{% url 'user:revise_info' car.pk %}" class="btn alert-warning">Revise</a>
                         <a href="{% url 'user:delete_car' car.pk %}" class="btn alert-danger">Delete</a>
                     </td>
+                    {% endif %}
                 </tr>
                 {% empty %}
                     <tr>
@@ -72,7 +76,11 @@
         </table>
     </div>
     <div class="text-right">
+        {% if not to_guest %}
         <a href="{% url 'index' %}" class="btn btn-secondary" style="margin-right: 10%; margin-top: 10px">戻る</a>
+        {% else %}
+        <a href="{% url 'ride:view_ride' %}" class="btn btn-secondary" style="margin-right: 10%; margin-top: 10px">戻る</a>
+        {% endif %}
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

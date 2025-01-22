@@ -118,7 +118,7 @@ class delete_car_view(DeleteView):
 
 @login_required(login_url='/user/login/')
 def display_car_view(request):
-    return render(request, 'user/display_car_info.html')
+    return render(request, 'user/display_car_info.html', context={'cars': request.user.cars.all()})
 
 @login_required(login_url='/user/login/')
 @require_http_methods(['GET', 'POST'])

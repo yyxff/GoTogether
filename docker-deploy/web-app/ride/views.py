@@ -1,6 +1,7 @@
 from traceback import print_tb
 
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import render, redirect, reverse
 from .forms import NewRideForm
 from django.views.decorators.http import require_http_methods
@@ -41,7 +42,7 @@ def new_ride_view(request):
 @login_required(login_url='/user/login/')
 def ride_view(request):
     rides = RideModel.objects.filter(owner__exact=request.user)
-    return render(request, 'ride/ride.html', context={'my_rides':rides})
+    return render(request, 'ride/ride.html', context={'rides':rides})
 
 # TODO: add a view for share ride form
 @login_required(login_url='/user/login/')
@@ -59,3 +60,17 @@ def revise_ride_info(request, ride_id):
             return render(request, 'ride/revise_ride.html', context={'form': form, 'success': True})
         else:
             return render(request, 'ride/revise_ride.html', context={'form': form, 'success': False})
+
+@login_required(login_url='/user/login/')
+@require_http_methods('GET')
+def search_my_ride(request):
+    q = request.GET.get('q')
+    rides = RideModel.objects.filter(Q(destination__icontains=q)|
+                                     Q(departure__icontains=q))
+    return render(request, 'ride/ride.html', context={'rides': rides, 'is_search': True})
+
+def ride_detail_view(request, ride_id):
+    ride = RideModel.objects.get(pk=ride_id)
+    driver = ride.driver
+    cars = driver.cars.all()
+    return render(request, 'user/display_car_info.html', context={'cars': cars, 'to_guest': True})
