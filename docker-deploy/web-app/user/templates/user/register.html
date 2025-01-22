@@ -4,20 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Page</title>
-    <!-- 引入 Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body class="bg-light">
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <!-- 卡片樣式 -->
                 <div class="card shadow-sm">
                     <div class="card-header bg-secondary text-white text-center">
                         <h3>Register Page</h3>
                     </div>
                     <div class="card-body">
-                        <!-- 註冊表單 -->
                         <form action="" method="post" class="needs-validation" novalidate>
                             {% csrf_token %}
 
@@ -54,12 +51,10 @@
                                 {% endif %}
                             </div>
 
-                            <!-- 提交按鈕 -->
                             <button type="submit" class="btn btn-success btn-block">Submit</button>
                         </form>
                     </div>
                     <div class="card-footer text-center">
-                        <!-- 返回首頁按鈕 -->
                         <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'index' %}'">戻る</button>
                     </div>
                 </div>
@@ -67,7 +62,6 @@
         </div>
     </div>
 
-    <!-- 引入 Bootstrap JS 和依賴庫（可選） -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

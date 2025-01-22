@@ -133,12 +133,12 @@ class DriverRegisterForm(forms.Form):
 class CarForm(forms.ModelForm):
     class Meta:
         model = CarModel
-        fields = '__all__'
+        exclude = ['user',]
         widgets = {
             'vehicle_type': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter vehicle type'}),
             'vehicle_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter vehicle number'}),
             'max_passenger': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter maximum passengers'}),
-            'sp_info': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter special information', 'style': 'height:150px;'}),
+            'sp_info': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter special information (Optional)', 'style': 'height:150px;'}),
         }
 
     def clean_max_passenger(self):

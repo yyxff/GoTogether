@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Change User Info</title>
+    <title>Revise Car Info</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container mt-5">
     <!-- Header -->
-    <h1 class="text-center mb-4">User Info</h1>
-
+<!--    <h1 class="text-center mb-4">Car Info</h1>-->
+    <!-- TODO: logout driver status -->
     <!-- Success Message -->
     {% if is_success %}
     <div class="alert alert-success text-center" role="alert">
@@ -23,26 +23,19 @@
     <form action="" method="POST" class="needs-validation" novalidate>
         {% csrf_token %}
         {{ forms.management_form }}
-        {% for form in forms %}
         <div class="card mb-3">
             <div class="card-header">
-                Car No. {{ forloop.counter }} Info
+                Revise Car Number: {{ car.pk }} <span class="badge badge-secondary">Information Sheet</span>
             </div>
             <div class="card-body">
                 {{ form.as_p }}
             </div>
         </div>
-        {% endfor %}
         <div class="text-center">
-            <button type="submit" class="btn btn-primary" style="margin-right: 12px;">Save</button>
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'index' %}'">戻る</button>
+            <button type="submit" class="btn btn-primary" style="margin-right: 50px;">Save</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'user:display_car' %}'">戻る</button>
         </div>
     </form>
-
-    <!-- Go Back Button -->
-    <div class="text-center mt-3">
-
-    </div>
 </div>
 
 <!-- Bootstrap JS and dependencies -->

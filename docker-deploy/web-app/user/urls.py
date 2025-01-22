@@ -8,5 +8,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('register/driver', views.register_driver_view, name='register_driver'),
-    path('revise_info', views.revise_car_view, name='revise_info'),
+    path('car/revise/<int:pk>/', views.revise_car_view, name='revise_info'),
+    path('car/delete/<int:pk>/', views.delete_car_view.as_view(), name='delete_car'),
+    path('car/info/', views.display_car_view, name='display_car'),
 ]

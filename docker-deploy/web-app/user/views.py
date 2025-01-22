@@ -1,8 +1,12 @@
 from http.client import responses
 
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
-from django.shortcuts import render, redirect, reverse, HttpResponse
+from django.shortcuts import render, redirect, reverse, HttpResponse, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView
+
 from .forms import RegisterForm, LoginForm, DriverRegisterForm, CarForm
 from django.views.decorators.http import require_http_methods
 from .models import RSSUser, CarModel
@@ -58,6 +62,8 @@ def logout_view(request):
 def register_driver_view(request):
     if not request.user.is_authenticated:
         return redirect(reverse('user:login'))
+    if request.user.is_driver:
+        return redirect(reverse('index'))
     if request.method == 'GET':
         form = DriverRegisterForm()
         return render(request, 'user/driver_register.html', context={'form': form})
@@ -87,21 +93,21 @@ def register_driver_view(request):
             return render(request, 'user/driver_register.html', context={'form': form, 'form_error': form_error})
 
 @require_http_methods(['GET', 'POST'])
-def revise_car_view(request):
-    if not request.user.is_authenticated:
-        return redirect(reverse('user:login'))
-    CarFormSet = modelformset_factory(CarModel,
-                                      form=CarForm,
-                                      fields=('vehicle_type', 'vehicle_number', 'max_passenger', 'sp_info'),
-                                      extra=0)
-    cars = CarModel.objects.filter(user=request.user)
+@login_required(login_url='/user/login/')
+def revise_car_view(request, pk):
     if request.method == 'GET':
-        formset = CarFormSet(queryset=cars)
-        return render(request, 'user/user_info.html', context={'forms': formset})
-    else:
-        formset = CarFormSet(request.POST, queryset=cars)
-        if formset.is_valid():
-            formset.save()
-            return render(request, 'user/user_info.html', context={'forms': formset, 'is_success': True})
-        else:
-            return render(request, 'user/user_info.html', context={'forms': formset, 'is_success': False})
+        car = request.user.cars.get(pk=pk)
+        form = CarForm(instance=car)
+        return render(request, 'user/revise_car_info.html', context={'car': car, 'form':form})
+
+class delete_car_view(DeleteView):
+    model = CarModel
+    template_name = 'user/confirm_car_delete.html'
+    success_url = reverse_lazy('index')
+
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)
+
+@login_required(login_url='/user/login/')
+def display_car_view(request):
+    return render(request, 'user/display_car_info.html')

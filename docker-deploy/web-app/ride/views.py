@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, reverse
 from .forms import NewRideForm
 from django.views.decorators.http import require_http_methods
@@ -35,6 +36,9 @@ def new_ride_view(request):
         else:
             return render(request, 'ride/new_ride.html', context={'form': form, 'success': False})
 
+@login_required(login_url='/user/login/')
 def ride_view(request):
     rides = RideModel.objects.filter(owner__exact=request.user)
     return render(request, 'ride/ride.html', context={'my_rides':rides})
+
+# TODO: add a view for share ride form
