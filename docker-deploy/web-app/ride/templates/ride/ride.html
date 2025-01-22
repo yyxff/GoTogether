@@ -68,14 +68,20 @@
                     <td>{{ ride.destination }}</td>
                     <td>{{ ride.arrival_time }}</td>
                     <td>{{ ride.total_passenger }}</td>
-                    <td>{{ ride.can_share|yesno:"Yes,No" }}</td>
+                    <td>
+                        {% if ride.can_share %}
+                            <span class="text-success">&#10003;</span>
+                        {% else %}
+                            <span class="text-danger">&#10007;</span>
+                        {% endif %}
+                    </td>
                     <td>{{ ride.vehicle_type }}</td>
                     <td>{{ ride.sp_info }}</td>
                     <td>
                         {% if ride.is_confirmed %}
-                            <span class="text-success">&#10003;</span> <!-- Green Checkmark -->
+                            <span class="text-success">&#10003;</span>
                         {% else %}
-                            <span class="text-danger">&#10007;</span> <!-- Red Cross -->
+                            <span class="text-danger">&#10007;</span>
                         {% endif %}
                     </td>
                     <td>{{ ride.driver.username }}</td>

@@ -87,7 +87,7 @@ def register_driver_view(request):
                                     max_passenger=max_passenger,
                                     sp_info=sp_info)
             user.save()
-            return redirect(reverse('index'))
+            return render(request, 'user/driver_register.html', context={'form': form, 'success': True})
         else:
             form_error = form.errors.get_json_data()
             return render(request, 'user/driver_register.html', context={'form': form, 'form_error': form_error})
@@ -108,6 +108,31 @@ class delete_car_view(DeleteView):
     def get_queryset(self):
         return self.model.objects.filter(user=self.request.user)
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = self.request.user
+        if not CarModel.objects.filter(user=user).exists():
+            user.is_driver = False
+            user.save()
+        return response
+
 @login_required(login_url='/user/login/')
 def display_car_view(request):
     return render(request, 'user/display_car_info.html')
+
+@login_required(login_url='/user/login/')
+@require_http_methods(['GET', 'POST'])
+def cancel_driver_view(request):
+    user = request.user
+    if request.method == 'GET':
+        if user.is_driver:
+            if user.confirmed_rides.exists():
+                return render(request, 'user/confirm_driver_delete.html', context={'fail': True})
+            return render(request, 'user/confirm_driver_delete.html', context={'fail': False})
+        else:
+            return render(request, 'user/confirm_driver_delete.html', context={'not_driver': True})
+    else:
+        user.is_driver = False
+        CarModel.objects.filter(user=user).delete()
+        user.save()
+        return render(request, 'user/confirm_driver_delete.html', context={'success': True})

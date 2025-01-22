@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout Driver</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- 卡片樣式 -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-secondary text-white text-center">
+                        <h3>Cancel Driver Status</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if not_driver %}
+                            <div class="alert alert-warning" role="alert">
+                                You are not a <strong>Driver</strong>.
+                            </div>
+                            <div>
+                                <a href="{% url 'user:display_car' %}" class="btn alert-secondary float-right">戻る</a>
+                            </div>
+                        {% elif fail %}
+                            <div class="alert alert-warning" role="alert">
+                                You still have confirmed <strong>RIDES</strong> ongoning.<br>Driver status cannot be cancelled.
+                            </div>
+                            <div class="test-center">
+                                <a href="{% url 'user:display_car' %}" class="btn alert-secondary float-right">戻る</a>
+                            </div>
+                        {% else %}
+                            <div class="alart alart-danger" role="alert">
+                                Are you sure you want to cancel your <strong>Driver</strong> status?
+                            </div>
+
+                            <form action="" method="post" class="d-flex justify-content-around align-items-center">
+                            {% csrf_token %}
+                            <!-- Submit Button -->
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                                <a href="{% url 'user:display_car' %}" class="btn alert-secondary">Cancel</a>
+                            </div>
+                            </form>
+                        {% endif %}
+                        <script>
+                            // if POST check SUCCESS
+                            {% if success %}
+                            alert("Cancel success!");
+                            // redirect url
+                            window.location.href = "{% url 'index' %}";
+                            {% endif %}
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

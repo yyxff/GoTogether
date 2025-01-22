@@ -25,6 +25,14 @@
                                 <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'index' %}'">戻る</button>
                             </div>
                         </form>
+                        <script>
+                            // if POST check SUCCESS
+                            {% if success %}
+                            alert("Driver register success!");
+                            // redirect url
+                            window.location.href = "{% url 'user:display_car' %}";
+                            {% endif %}
+                        </script>
                     </div>
                 </div>
             </div>
