@@ -68,13 +68,16 @@ def revise_ride_info(request, ride_id):
 @require_http_methods('GET')
 def search_my_ride(request):
     q = request.GET.get('q')
-    rides = RideModel.objects.filter(Q(owner__exact=request.user)&
-                                     (Q(destination__icontains=q)|
-                                     Q(departure__icontains=q)))
-    share_rides = RideModel.objects.filter(Q(share_user=request.user)&
-                                           (Q(destination__icontains=q)|
-                                           Q(departure__icontains=q)))
-    return render(request, 'ride/ride.html', context={'rides': rides, 'is_search': True, 'share_rides': share_rides, 'view_my_ride': True})
+    date = request.GET.get('date')
+    ride_query = Q(owner=request.user) & (Q(destination__icontains=q) | Q(departure__icontains=q))
+    share_query = Q(share_user=request.user) & (Q(destination__icontains=q) | Q(departure__icontains=q))
+    if date:
+        ride_query &= Q(pub_time__date=date)
+        share_query &= Q(pub_time__date=date)
+
+    rides = RideModel.objects.filter(ride_query)
+    share_rides = RideModel.objects.filter(share_query)
+    return render(request, 'ride/ride.html', context={'rides': rides, 'is_search': True, 'share_rides': share_rides, 'view_my_ride': True, 'keyword_request': q, 'date_request': date})
 
 @login_required(login_url='/user/login')
 def ride_detail_view(request, ride_id):
