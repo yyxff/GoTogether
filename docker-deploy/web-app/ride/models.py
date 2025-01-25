@@ -13,8 +13,11 @@ class RideModel(models.Model):
     sp_info = models.TextField(blank=True, default='', verbose_name='Special Needs*')
     is_confirmed = models.BooleanField(default=False)
 
+    pub_time = models.DateTimeField(auto_now_add=True)
+
     owner = models.ForeignKey(RSSUser, on_delete=models.CASCADE, related_name='owned_rides', null=True)
     driver = models.ForeignKey(RSSUser, on_delete=models.CASCADE, related_name='confirmed_rides', null=True)
+    share_user = models.ManyToManyField(RSSUser, related_name='share_rides')
 
     class Meta:
-        ordering = ['-arrival_time']
+        ordering = ['-pub_time', 'is_confirmed']

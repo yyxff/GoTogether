@@ -8,7 +8,7 @@ from django.utils.timezone import now
 class NewRideForm(forms.ModelForm):
     class Meta:
         model = RideModel
-        exclude = ['is_confirmed', 'owner', 'driver',]
+        exclude = ['is_confirmed', 'owner', 'driver', 'share_user']
         widgets = {
             'departure': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter departure position'}),
             'destination': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter destination'}),

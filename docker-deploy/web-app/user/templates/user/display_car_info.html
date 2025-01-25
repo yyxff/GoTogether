@@ -40,6 +40,9 @@
             <thead class="thead-dark">
                 <tr>
                     <th>No.</th>
+                    {% if to_guest %}
+                    <th>Driver</th>
+                    {% endif %}
                     <th>Vehicle Type</th>
                     <th>Vehicle Number</th>
                     <th>Maximum Passenger</th>
@@ -53,6 +56,9 @@
                 {% for car in cars %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
+                    {% if to_guest %}
+                    <th>{{ car.user }}</th>
+                    {% endif %}
                     <td>{{ car.vehicle_type }}</td>
                     <td>{{ car.vehicle_number }}</td>
                     <td>{{ car.max_passenger }}</td>
@@ -79,7 +85,7 @@
         {% if not to_guest %}
         <a href="{% url 'index' %}" class="btn btn-secondary" style="margin-right: 10%; margin-top: 10px">戻る</a>
         {% else %}
-        <a href="{% url 'ride:view_ride' %}" class="btn btn-secondary" style="margin-right: 10%; margin-top: 10px">戻る</a>
+        <a href="{% url 'ride:view_my_ride' %}" class="btn btn-secondary" style="margin-right: 10%; margin-top: 10px">戻る</a>
         {% endif %}
     </div>
 

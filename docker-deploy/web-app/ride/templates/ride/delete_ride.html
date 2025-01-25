@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Deletion Page</title>
+    <title>Ride Delete Page</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
@@ -38,11 +38,11 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="alert alert-danger" role="alert">
-                        Are you sure you want to delete this car?
+                        Are you sure you want to delete this ride?
                 </div>
                 <div class="card shadow-sm">
                     <div class="card-header bg-secondary text-white text-center">
-                        <h5>Delete Car</h5>
+                        <h5>Delete Ride</h5>
                     </div>
                     <div class="card-body">
 
@@ -56,33 +56,40 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Car Type</td>
-                                    <td>{{ object.vehicle_type }}</td>
+                                    <td>Departure place</td>
+                                    <td>{{ ride.departure }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Vehicle Number</td>
-                                    <td>{{ object.vehicle_number }}</td>
+                                    <td>Destination</td>
+                                    <td>{{ ride.destination }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Max Passengers</td>
-                                    <td>{{ object.max_passenger }}</td>
+                                    <td>Arrival time</td>
+                                    <td>{{ ride.arrival_time }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Special Info</td>
-                                    <td>{{ object.sp_info }}</td>
+                                    <td>Total passengers</td>
+                                    <td>{{ ride.total_passenger }}</td>
                                 </tr>
                             </tbody>
                         </table>
                         </div>
-
                     </div>
                     <div class="card-footer text-center">
                         <form action="" method="post" class="d-flex justify-content-around align-items-center">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Yes, Delete</button>
-                            <a href="{% url 'user:display_car' %}" class="btn alert-secondary">Cancel</a>
+                            <a href="{% url 'ride:view_my_ride' %}" class="btn alert-secondary">Cancel</a>
                         </form>
                     </div>
+                        <script>
+                            // if POST check SUCCESS
+                            {% if success %}
+                            alert("Delete success!");
+                            // redirect url
+                            window.location.href = "{% url 'ride:view_my_ride' %}";
+                            {% endif %}
+                        </script>
                 </div>
             </div>
         </div>

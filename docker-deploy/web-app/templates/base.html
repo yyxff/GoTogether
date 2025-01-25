@@ -21,22 +21,22 @@
         <a class="nav-link" href="">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="{% url 'ride:view_ride' %}" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="{% url 'ride:view_my_ride' %}" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Ride
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="{% url 'ride:view_my_ride' %}">My Rides</a>
           <a class="dropdown-item" href="{% url 'ride:new_ride' %}">New Rides</a>
-          <a class="dropdown-item" href="{% url 'ride:view_ride' %}">My Rides</a>
-          <a class="dropdown-item" href="">Shared Rides</a>
+          <a class="dropdown-item" href="{% url 'ride:view_share_ride' %}">Shared Rides</a>
         </div>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="{% url 'ride:view_ride' %}" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="{% url 'user:display_car' %}" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Driver
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{% url 'user:register_driver' %}">Register</a>
-          <a class="dropdown-item" href="{% url 'user:display_car' %}">My Cars</a>
+            <a class="dropdown-item" href="{% url 'user:display_car' %}">My Cars</a>
+            <a class="dropdown-item" href="{% url 'user:register_driver' %}">Register</a>
         </div>
       </li>
       <li class="nav-item">
@@ -83,7 +83,7 @@
         <!-- view rides -->
         <div class="text-center mt-3">
             View ride requests:
-            <button class="btn btn-info btn-sm" onclick="window.location.href='{% url 'ride:view_ride' %}'">View</button>
+            <button class="btn btn-info btn-sm" onclick="window.location.href='{% url 'ride:view_my_ride' %}'">View</button>
         </div>
 
         <!-- log out -->

@@ -44,7 +44,9 @@
 <body>
     <div class="container table-container">
         <div class="d-flex justify-content-between align-items-center">
+            {% if view_my_ride %}
             <h3>My Rides</h3>
+            {% endif %}
             <form class="form-inline" action="{% url 'ride:search_my_ride' %}">
                 <input name="q" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="margin-bottom: 20px;">
                 <button class="btn btn-outline-success" type="submit" style="margin-bottom: 20px;">Search</button>
@@ -106,10 +108,12 @@
                     <td>
 <!--                        Redirect to a ride revision page-->
                         <a href="{% url 'ride:revise_ride' ride.pk %}" class="btn btn-primary btn-sm">Revise</a>
+                        <a href="{% url 'ride:delete_ride' ride.pk %}" class="btn btn-danger btn-sm">Delete</a>
                     </td>
                     {% else %}
                     <td>
                         <button class="btn btn-secondary btn-sm" disabled>Revise</button>
+                        <button class="btn btn-secondary btn-sm" disabled>Delete</button>
                     </td>
                     {% endif %}
                 </tr>
@@ -127,6 +131,87 @@
             </tbody>
         </table>
 
+        <div class="d-flex justify-content-between align-items-center">
+            {% if view_my_ride %}
+            <h3>My Share Rides</h3>
+            {% endif %}
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Departure</th>
+                    <th>Destination</th>
+                    <th>Arrival Time</th>
+                    <th>Passengers</th>
+                    <th>Share</th>
+                    <th>Confirmed</th>
+                    <th>Driver</th>
+                    <th>Details</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ride in share_rides %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ ride.departure }}</td>
+                    <td>{{ ride.destination }}</td>
+                    <td>{{ ride.arrival_time }}</td>
+                    <td>{{ ride.total_passenger }}</td>
+                    <td>
+                        {% if ride.can_share %}
+                            <span class="text-success">&#10003;</span>
+                        {% else %}
+                            <span class="text-danger">&#10007;</span>
+                        {% endif %}
+                    </td>
+<!--                    <td>{{ ride.vehicle_type }}</td>-->
+<!--                    <td>{{ ride.sp_info }}</td>-->
+                    <td>
+                        {% if ride.is_confirmed %}
+                            <span class="text-success">&#10003;</span>
+                        {% else %}
+                            <span class="text-danger">&#10007;</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ ride.driver.username }}</td>
+
+                    {% if ride.is_confirmed %}
+                    <td>
+<!--                        Details button to show detail-->
+                        <a href="{% url 'ride:ride_detail' ride.pk %}" class="btn btn-primary btn-sm">Show</a>
+                    </td>
+                    {% else %}
+                    <td>
+                        <button class="btn btn-secondary btn-sm" disabled>Show</button>
+                    </td>
+                    {% endif %}
+
+                    {% if not ride.is_confirmed %}
+                    <td>
+<!--                        Redirect to a ride revision page-->
+                        <a href="{% url 'ride:revise_ride' ride.pk %}" class="btn btn-primary btn-sm">Revise</a>
+                    </td>
+                    {% else %}
+                    <td>
+                        <button class="btn btn-secondary btn-sm" disabled>Revise</button>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% empty %}
+                <!-- Display message if no rides are found -->
+                <tr>
+                    <td colspan="10" class="text-center">
+                        No share rides found.
+                        {% if rides is empty %}
+                        <a href="{% url 'ride:new_ride' %}" class="badge alert-primary">Click here</a> to register a <strong>new Ride</strong>.
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         <!-- Add a back button -->
         <div class="text-right">
             <a href="{% url 'index' %}" class="btn btn-secondary" style="margin-right: 10%; margin-top: 10px">戻る</a>

@@ -40,15 +40,18 @@ def new_ride_view(request):
             return render(request, 'ride/new_ride.html', context={'form': form, 'success': False})
 
 @login_required(login_url='/user/login/')
-def ride_view(request):
+def my_ride_view(request):
     rides = RideModel.objects.filter(owner__exact=request.user)
-    return render(request, 'ride/ride.html', context={'rides':rides})
+    share_rides = RideModel.objects.filter(share_user=request.user)
+    return render(request, 'ride/ride.html', context={'rides': rides, 'view_my_ride': True, 'share_rides': share_rides})
 
 # TODO: add a view for share ride form
 @login_required(login_url='/user/login/')
 @require_http_methods(['GET', 'POST'])
 def revise_ride_info(request, ride_id):
     ride = RideModel.objects.get(pk=ride_id)
+    if ride.owner != request.user:
+        return redirect(reverse('ride:view_my_ride'))
     form = NewRideForm(instance=ride)
     if request.method == 'GET':
         return render(request, 'ride/revise_ride.html', context={'form': form, 'ride': ride})
@@ -65,12 +68,53 @@ def revise_ride_info(request, ride_id):
 @require_http_methods('GET')
 def search_my_ride(request):
     q = request.GET.get('q')
-    rides = RideModel.objects.filter(Q(destination__icontains=q)|
-                                     Q(departure__icontains=q))
-    return render(request, 'ride/ride.html', context={'rides': rides, 'is_search': True})
+    rides = RideModel.objects.filter(Q(owner__exact=request.user)&
+                                     (Q(destination__icontains=q)|
+                                     Q(departure__icontains=q)))
+    share_rides = RideModel.objects.filter(Q(share_user=request.user)&
+                                           (Q(destination__icontains=q)|
+                                           Q(departure__icontains=q)))
+    return render(request, 'ride/ride.html', context={'rides': rides, 'is_search': True, 'share_rides': share_rides, 'view_my_ride': True})
 
+@login_required(login_url='/user/login')
 def ride_detail_view(request, ride_id):
     ride = RideModel.objects.get(pk=ride_id)
     driver = ride.driver
     cars = driver.cars.all()
     return render(request, 'user/display_car_info.html', context={'cars': cars, 'to_guest': True})
+
+@login_required(login_url='user/login')
+@require_http_methods(['GET','POST'])
+def ride_delete_view(request, ride_id):
+    ride = RideModel.objects.get(pk=ride_id)
+    user = request.user
+    if user != ride.owner:
+        return redirect(reverse('ride:view_my_ride'))
+    if request.method == 'GET':
+        return render(request,'ride/delete_ride.html', context={'ride': ride})
+    else:
+        ride.delete()
+        return render(request, 'ride/delete_ride.html', context={'success': True})
+
+def share_ride_view(request):
+    user = request.user
+    # list share ride:
+    # 1. ride can be shared
+    # 2. ride cannot have been confirmed
+    # 3. user cannot be the owner of this ride
+    rides = RideModel.objects.filter(Q(can_share=True)&
+                                     Q(is_confirmed=False)&
+                                     ~Q(owner__exact=user))
+    return render(request, 'ride/share_ride.html', context={'rides':rides, 'view_share_ride': True})
+
+@require_http_methods('GET')
+def search_share_ride(request):
+    q = request.GET.get('q')
+    user = request.user
+    rides = RideModel.objects.filter(Q(can_share=True)&
+                                     Q(is_confirmed=False)&
+                                     ~Q(owner__exact=user)&
+                                     (Q(departure__icontains=q)|
+                                      Q(destination__icontains=q)))
+    return render(request, 'ride/share_ride.html', context={'rides': rides, 'view_share_ride': True})
+

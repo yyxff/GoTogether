@@ -33,6 +33,8 @@ def register_view(request):
 
 @require_http_methods(['GET', 'POST'])
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect(reverse('index'))
     if request.method == 'GET':
         form = LoginForm()
         return render(request, 'user/login.html', context={'form': form})
