@@ -72,8 +72,8 @@ def search_my_ride(request):
     ride_query = Q(owner=request.user) & (Q(destination__icontains=q) | Q(departure__icontains=q))
     share_query = Q(share_user=request.user) & (Q(destination__icontains=q) | Q(departure__icontains=q))
     if date:
-        ride_query &= Q(pub_time__date=date)
-        share_query &= Q(pub_time__date=date)
+        ride_query &= Q(arrival_time__date=date)
+        share_query &= Q(arrival_time__date=date)
 
     rides = RideModel.objects.filter(ride_query)
     share_rides = RideModel.objects.filter(share_query)
@@ -105,19 +105,25 @@ def share_ride_view(request):
     # 1. ride can be shared
     # 2. ride cannot have been confirmed
     # 3. user cannot be the owner of this ride
-    rides = RideModel.objects.filter(Q(can_share=True)&
-                                     Q(is_confirmed=False)&
-                                     ~Q(owner__exact=user))
+    query = Q(can_share=True)&Q(is_confirmed=False)
+    if user.is_authenticated:
+        query &= ~Q(owner__exact=user)
+    rides = RideModel.objects.filter(query)
     return render(request, 'ride/share_ride.html', context={'rides':rides, 'view_share_ride': True})
 
 @require_http_methods('GET')
 def search_share_ride(request):
     q = request.GET.get('q')
+    startTime = request.GET.get('startTime')
+    endTime = request.GET.get('endTime')
     user = request.user
-    rides = RideModel.objects.filter(Q(can_share=True)&
-                                     Q(is_confirmed=False)&
-                                     ~Q(owner__exact=user)&
-                                     (Q(departure__icontains=q)|
-                                      Q(destination__icontains=q)))
-    return render(request, 'ride/share_ride.html', context={'rides': rides, 'view_share_ride': True})
+    query = Q(can_share=True)&Q(is_confirmed=False)&(Q(departure__icontains=q)|Q(destination__icontains=q))
+    if user.is_authenticated:
+        query &= ~Q(owner__exact=user)
+    if startTime:
+        query &= Q(arrival_time__date__gte=startTime)
+    if endTime:
+        query &= Q(arrival_time__date__lte=endTime)
+    rides = RideModel.objects.filter(query)
+    return render(request, 'ride/share_ride.html', context={'rides': rides, 'view_share_ride': True, 'keyword_request': q, 'startTime_request': startTime, 'endTime_request': endTime})
 

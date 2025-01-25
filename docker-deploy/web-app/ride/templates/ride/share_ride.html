@@ -48,8 +48,28 @@
             <h3>All Share Rides</h3>
             {% endif %}
             <form class="form-inline" action="{% url 'ride:search_share_ride' %}">
-                <input name="q" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="margin-bottom: 20px;">
-                <button class="btn btn-outline-success" type="submit" style="margin-bottom: 20px;">Search</button>
+{#                Start time search block#}
+                <label for="start-date" class="sr-only">startTime</label>
+                <input name="startTime" id="start-date" class="form-control mr-sm-2 placeholder-text"
+                       type="text" placeholder="Select Start Time"
+                       onfocus="(this.type='date')" onblur="(this.type='text')"
+                       style="margin-bottom: 20px;" value="{{startTime_request}}">
+
+{#                End time search block#}
+                <label for="end-date" class="sr-only">endTime</label>
+                <input name="endTime" id="end-date" class="form-control mr-sm-2 placeholder-text"
+                       type="text" placeholder="Select End Time"
+                       onfocus="(this.type='date')" onblur="(this.type='text')"
+                       style="margin-bottom: 20px;" value="{{endTime_request}}">
+
+{#                text search#}
+                <input name="q" class="form-control mr-sm-2" type="search"
+                       placeholder="Search" aria-label="Search"
+                       style="margin-bottom: 20px;" value="{{keyword_request}}">
+
+                <a href="{% url 'ride:view_share_ride' %}" class="btn btn-outline-danger btn-sm mr-sm-2" style="margin-bottom: 20px;">Clean</a>
+{#                Submit button#}
+                <button class="btn btn-outline-success btn-sm" type="submit" style="margin-bottom: 20px;">Search</button>
             </form>
         </div>
         <table class="table table-bordered table-striped">
@@ -60,10 +80,6 @@
                     <th>Destination</th>
                     <th>Arrival Time</th>
                     <th>Max Passengers</th>
-<!--                    <th>Share</th>-->
-<!--                    <th>Confirmed</th>-->
-<!--                    <th>Driver</th>-->
-<!--                    <th>Details</th>-->
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -75,34 +91,6 @@
                     <td>{{ ride.destination }}</td>
                     <td>{{ ride.arrival_time }}</td>
                     <td>{{ ride.total_passenger }}</td>
-<!--                    <td>-->
-<!--                        {% if ride.can_share %}-->
-<!--                            <span class="text-success">&#10003;</span>-->
-<!--                        {% else %}-->
-<!--                            <span class="text-danger">&#10007;</span>-->
-<!--                        {% endif %}-->
-<!--                    </td>-->
-<!--&lt;!&ndash;                    <td>{{ ride.vehicle_type }}</td>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <td>{{ ride.sp_info }}</td>&ndash;&gt;-->
-<!--                    <td>-->
-<!--                        {% if ride.is_confirmed %}-->
-<!--                            <span class="text-success">&#10003;</span>-->
-<!--                        {% else %}-->
-<!--                            <span class="text-danger">&#10007;</span>-->
-<!--                        {% endif %}-->
-<!--                    </td>-->
-<!--                    <td>{{ ride.driver.username }}</td>-->
-
-<!--                    {% if ride.is_confirmed %}-->
-<!--                    <td>-->
-<!--&lt;!&ndash;                        Details button to show detail&ndash;&gt;-->
-<!--                        <a href="{% url 'ride:ride_detail' ride.pk %}" class="btn btn-primary btn-sm">Show</a>-->
-<!--                    </td>-->
-<!--                    {% else %}-->
-<!--                    <td>-->
-<!--                        <button class="btn btn-secondary btn-sm" disabled>Show</button>-->
-<!--                    </td>-->
-<!--                    {% endif %}-->
                     <td>
 <!--                        Redirect to a ride join page-->
                     <a href="{% url 'ride:revise_ride' ride.pk %}" class="btn btn-primary btn-sm">Join</a>

@@ -81,6 +81,7 @@ class LoginForm(forms.Form):
         max_length=20,
         min_length=6,
         label='Password',
+        error_messages={'required': 'Please enter password.'},
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
             'placeholder': 'Enter your password'

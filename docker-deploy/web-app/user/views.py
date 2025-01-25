@@ -53,8 +53,9 @@ def login_view(request):
                     request.session.set_expiry(0)
                 return redirect(reverse('index'))
             else:
-                form.add_error('username', 'Username or password error.')
-                return render(request, 'user/login.html', context={'form' : form, 'form_error': form.errors.get_json_data()})
+                return render(request, 'user/login.html', context={'form' : form})
+        else:
+            return render(request, 'user/login.html', context={'form' : form})
 
 def logout_view(request):
     logout(request)
