@@ -41,11 +41,12 @@ def new_ride_view(request):
 
 @login_required(login_url='/user/login/')
 def my_ride_view(request):
+    user = request.user
     rides = RideModel.objects.filter(owner__exact=request.user)
     share_rides = RideModel.objects.filter(share_user=request.user)
-    return render(request, 'ride/ride.html', context={'rides': rides, 'view_my_ride': True, 'share_rides': share_rides})
+    driver_rides = RideModel.objects.filter(driver__exact=user)
+    return render(request, 'ride/ride.html', context={'rides': rides, 'view_my_ride': True, 'share_rides': share_rides, 'driver_rides': driver_rides})
 
-# TODO: add a view for share ride form
 @login_required(login_url='/user/login/')
 @require_http_methods(['GET', 'POST'])
 def revise_ride_info(request, ride_id):
@@ -82,6 +83,9 @@ def search_my_ride(request):
 @login_required(login_url='/user/login')
 def ride_detail_view(request, ride_id):
     ride = RideModel.objects.get(pk=ride_id)
+    user = request.user
+    if ride.owner != user and not ride.share_user.filter(pk=user.pk).exists():
+        return redirect(reverse('ride:view_my_ride'))
     driver = ride.driver
     cars = driver.cars.all()
     return render(request, 'user/display_car_info.html', context={'cars': cars, 'to_guest': True})
@@ -154,7 +158,8 @@ def ride_info_view(request, ride_id):
         return redirect(reverse('index'))
     ride = RideModel.objects.get(pk=ride_id)
     if request.method == 'GET':
-        return render(request, 'ride/ride_info.html', context={'ride': ride})
+        show_info_only = request.GET.get('show_info_only')
+        return render(request, 'ride/ride_info.html', context={'ride': ride, 'show_info_only': show_info_only})
     else:
         ride.driver = request.user
         ride.is_confirmed = True
@@ -185,15 +190,19 @@ def search_ride_request(request):
 @login_required(login_url='/user/login/')
 def join_ride(request, ride_id):
 
-    # add this user to share_user
-    # update total_passenger
+    # Valid join detect
     user = request.user
     ride = RideModel.objects.get(pk=ride_id)
-    if ride.owner == user or ride.share_user.filter(pk=user.pk).exists() or ride.driver == user:
-        rides = get_ride_request_query(request)
+    if (ride.owner == user or
+            ride.share_user.filter(pk=user.pk).exists() or
+            ride.driver == user or
+            ride.is_confirmed):
         return render(request, 'ride/ride_request.html', context={'fail': True})
+
+    # add this user to share_user
+    # update total_passenger
     ride.total_passenger += 1
-    ride.share_user.add(request.user)
+    ride.share_user.add(user)
     ride.save()
     return render(request, 'ride/ride_request.html', context={'success': True})
 
@@ -202,11 +211,15 @@ def join_ride(request, ride_id):
 @login_required(login_url='/user/login/')
 def cancel_share_ride(request, ride_id):
 
+    # Valid cancel detect
+    ride = RideModel.objects.get(pk=ride_id)
+    user = request.user
+    if not ride.share_user.filter(pk=user.pk).exists():
+        return redirect(reverse('ride:view_my_ride'))
+
     # remove this user from share_user
     # update total_passenger
-
-    ride = RideModel.objects.get(pk=ride_id)
-    ride.share_user.remove(request.user)
+    ride.share_user.remove(user)
     ride.total_passenger -= 1
     ride.save()
     return redirect(reverse('ride:view_my_ride'))
