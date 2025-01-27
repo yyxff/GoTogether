@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride Info</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- 卡片樣式 -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-secondary text-white text-center">
+                        <h3>View Ride Request Info</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Attribute</th>
+                                    <th scope="col">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Departure</td>
+                                    <td>{{ ride.departure }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Destination</td>
+                                    <td>{{ ride.destination }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Expected Arrival Time</td>
+                                    <td>{{ ride.arrival_time }}</td>
+                                </tr>
+                                <tr>
+                                    <td>total_passenger</td>
+                                    <td>{{ ride.total_passenger }}</td>
+                                </tr>
+                                <tr>
+                                    <td>vehicle type</td>
+                                    <td>{{ ride.vehicle_type }}</td>
+                                </tr>
+                                <tr>
+                                    <td>sp_info</td>
+                                    <td>{{ ride.sp_info }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <form action="" method="post" class="d-flex justify-content-around align-items-center">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary" style="margin-right: 16px; width: 100px">Confirm</button>
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'ride:ride_requests' %}'">Cancel</button>
+                            </form>
+                        </div>
+                        <script>
+                            // if POST check SUCCESS
+                            {% if success %}
+                            alert("Submit success!");
+                            // redirect url
+                            window.location.href = "{% url 'ride:view_my_ride' %}";
+                            {% endif %}
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

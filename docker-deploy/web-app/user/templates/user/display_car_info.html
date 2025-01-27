@@ -35,7 +35,11 @@
 </head>
 <body>
     <div class="container table-container">
-        <h3>Your Cars Info</h3>
+        {% if to_guest %}
+            <h3>Cars Info</h3>
+        {% else %}
+            <h3>Your Cars Info</h3>
+        {% endif %}
         <table class="table table-bordered table-striped">
             <thead class="thead-dark">
                 <tr>

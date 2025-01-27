@@ -12,4 +12,7 @@ urlpatterns = [
     path('delete/<int:ride_id>', views.ride_delete_view, name='delete_ride'),
     path('share/', views.share_ride_view, name='view_share_ride'),
     path('search/share/', views.search_share_ride, name='search_share_ride'),
+    path('requests/', views.ride_requests_view, name='ride_requests'),
+    path('requests/accept/<int:ride_id>', views.ride_info_view, name='ride_info'),
+    path('requests/search', views.search_ride_request, name='search_ride_request'),
 ]

@@ -117,7 +117,7 @@ def search_share_ride(request):
     startTime = request.GET.get('startTime')
     endTime = request.GET.get('endTime')
     user = request.user
-    query = Q(can_share=True)&Q(is_confirmed=False)&(Q(departure__icontains=q)|Q(destination__icontains=q)|Q(total_passenger__contains=q))
+    query = Q(can_share=True)&Q(is_confirmed=False)&(Q(destination__icontains=q)|Q(total_passenger__contains=q))
     if user.is_authenticated:
         query &= ~Q(owner__exact=user)
     if startTime:
@@ -126,4 +126,48 @@ def search_share_ride(request):
         query &= Q(arrival_time__date__lte=endTime)
     rides = RideModel.objects.filter(query)
     return render(request, 'ride/share_ride.html', context={'rides': rides, 'view_share_ride': True, 'keyword_request': q, 'startTime_request': startTime, 'endTime_request': endTime})
+
+@login_required(login_url='/user/login/')
+def ride_requests_view(request):
+    user = request.user
+    if not user.is_driver:
+        return redirect(reverse('index'))
+    query = Q(is_confirmed=False) & ~Q(owner__exact=user) & ~Q(share_user__exact=user)
+    rides = RideModel.objects.filter(query)
+    return render(request, 'ride/ride_request.html', context={'rides': rides,})
+
+@login_required(login_url='/user/login/')
+@require_http_methods(['GET', 'POST'])
+def ride_info_view(request, ride_id):
+    # TODO: limitation required
+    if not request.user.is_driver:
+        return redirect(reverse('index'))
+    ride = RideModel.objects.get(pk=ride_id)
+    if request.method == 'GET':
+        return render(request, 'ride/ride_info.html', context={'ride': ride})
+    else:
+        ride.driver = request.user
+        ride.is_confirmed = True
+        ride.save()
+        return render(request, 'ride/ride_info.html', context={'ride': ride, 'success': True})
+
+@require_http_methods('GET')
+@login_required(login_url='/user/login/')
+def search_ride_request(request):
+    q = request.GET.get('q')
+    startTime = request.GET.get('startTime')
+    endTime = request.GET.get('endTime')
+    user = request.user
+    query = (Q(is_confirmed=False)&
+             (Q(destination__icontains=q)|
+              Q(total_passenger__contains=q)|
+              Q(departure__icontains=q)))
+    if not user.is_driver:
+        return redirect(reverse('index'))
+    if startTime:
+        query &= Q(arrival_time__date__gte=startTime)
+    if endTime:
+        query &= Q(arrival_time__date__lte=endTime)
+    rides = RideModel.objects.filter(query)
+    return render(request, 'ride/ride_request.html', context={'rides': rides, 'keyword_request': q, 'startTime_request': startTime, 'endTime_request': endTime})
 
