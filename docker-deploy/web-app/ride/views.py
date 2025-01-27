@@ -117,7 +117,7 @@ def search_share_ride(request):
     startTime = request.GET.get('startTime')
     endTime = request.GET.get('endTime')
     user = request.user
-    query = Q(can_share=True)&Q(is_confirmed=False)&(Q(departure__icontains=q)|Q(destination__icontains=q))
+    query = Q(can_share=True)&Q(is_confirmed=False)&(Q(departure__icontains=q)|Q(destination__icontains=q)|Q(total_passenger__contains=q))
     if user.is_authenticated:
         query &= ~Q(owner__exact=user)
     if startTime:
