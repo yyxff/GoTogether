@@ -105,10 +105,14 @@ def share_ride_view(request):
     # 1. ride can be shared
     # 2. ride cannot have been confirmed
     # 3. user cannot be the owner of this ride
+    
     query = Q(can_share=True)&Q(is_confirmed=False)
     if user.is_authenticated:
         query &= ~Q(owner__exact=user)
+        query &= ~Q(share_user__exact=user)
+        query &= ~Q(driver__exact=user)
     rides = RideModel.objects.filter(query)
+
     return render(request, 'ride/share_ride.html', context={'rides':rides, 'view_share_ride': True})
 
 @require_http_methods('GET')
@@ -117,7 +121,7 @@ def search_share_ride(request):
     startTime = request.GET.get('startTime')
     endTime = request.GET.get('endTime')
     user = request.user
-    query = Q(can_share=True)&Q(is_confirmed=False)&(Q(destination__icontains=q)|Q(total_passenger__contains=q))
+    query = Q(can_share=True)&Q(is_confirmed=False)&(Q(destination__icontains=q)|Q(departure__icontains=q)|Q(total_passenger__contains=q))
     if user.is_authenticated:
         query &= ~Q(owner__exact=user)
     if startTime:
@@ -171,3 +175,31 @@ def search_ride_request(request):
     rides = RideModel.objects.filter(query)
     return render(request, 'ride/ride_request.html', context={'rides': rides, 'keyword_request': q, 'startTime_request': startTime, 'endTime_request': endTime})
 
+
+# join ride
+@login_required(login_url='/user/login/')
+def join_ride(request, ride_id):
+
+    # add this user to share_user
+    # update total_passenger
+    
+    ride = RideModel.objects.get(pk=ride_id)
+    ride.total_passenger += 1
+    ride.share_user.add(request.user)
+    ride.save()
+
+    return redirect(reverse('ride:view_my_ride'))
+
+    
+# cancel my share ride
+@login_required(login_url='/user/login/')
+def cancel_share_ride(request, ride_id):
+
+    # remove this user from share_user
+    # update total_passenger
+
+    ride = RideModel.objects.get(pk=ride_id)
+    ride.share_user.remove(request.user)
+    ride.total_passenger -= 1
+    ride.save()
+    return redirect(reverse('ride:view_my_ride'))

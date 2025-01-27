@@ -79,7 +79,8 @@
                     <th>Departure</th>
                     <th>Destination</th>
                     <th>Arrival Time</th>
-                    <th>Max Passengers</th>
+                    <th>Vehicle Type</th>
+                    <th>Current Total Passengers</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -90,17 +91,18 @@
                     <td>{{ ride.departure }}</td>
                     <td>{{ ride.destination }}</td>
                     <td>{{ ride.arrival_time }}</td>
+                    <td>{{ ride.vehicle_type }}</td>
                     <td>{{ ride.total_passenger }}</td>
                     <td>
 <!--                        Redirect to a ride join page-->
-                    <a href="{% url 'ride:revise_ride' ride.pk %}" class="btn btn-primary btn-sm">Join</a>
+                    <a href="{% url 'ride:join_ride' ride.pk %}" class="btn btn-primary btn-sm">Join</a>
                     </td>
                 </tr>
                 {% empty %}
                 <!-- Display message if no rides are found -->
                 <tr>
                     <td colspan="10" class="text-center">
-                        No rides found.
+                        No shared rides found.
                         {% if not is_search %}
                         <a href="{% url 'ride:new_ride' %}" class="badge alert-primary">Click here</a> to register a <strong>new Ride</strong>.
                         {% endif %}

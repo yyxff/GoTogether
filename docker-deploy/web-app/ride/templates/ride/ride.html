@@ -197,11 +197,14 @@
                     {% if not ride.is_confirmed %}
                     <td>
 <!--                        Redirect to a ride revision page-->
+                        <!-- todo: share user should can revise passengers number -->
                         <a href="{% url 'ride:revise_ride' ride.pk %}" class="btn btn-primary btn-sm">Revise</a>
+                        <a href="{% url 'ride:cancel_share_ride' ride.pk %}" class="btn btn-danger btn-sm">Cancel</a>
                     </td>
                     {% else %}
                     <td>
                         <button class="btn btn-secondary btn-sm" disabled>Revise</button>
+                        <button class="btn btn-secondary btn-sm" disabled>Cancel</button>
                     </td>
                     {% endif %}
                 </tr>

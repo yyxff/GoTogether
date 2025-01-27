@@ -15,4 +15,10 @@ urlpatterns = [
     path('requests/', views.ride_requests_view, name='ride_requests'),
     path('requests/accept/<int:ride_id>', views.ride_info_view, name='ride_info'),
     path('requests/search', views.search_ride_request, name='search_ride_request'),
+
+    # join ride
+    path('join/<int:ride_id>', views.join_ride, name='join_ride'),
+
+    # cancel my share ride
+    path('cancel_share_ride/<int:ride_id>', views.cancel_share_ride, name='cancel_share_ride'),
 ]
