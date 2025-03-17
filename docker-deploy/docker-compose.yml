@@ -11,12 +11,7 @@ services:
             - data-volume:/var/lib/postgresql/data
   web-init:
       build: ./web-app
-      command:
-        - sh
-        - -c
-        - "/code/initserver.sh
-            && chown nobody:nogroup /code/logs/*.log
-            && chmod 666 /code/logs/*.log"
+      command: /code/initserver.sh
       volumes:
         - ./web-app:/code
       environment:
@@ -41,6 +36,7 @@ services:
        - "8000:8000"
      volumes:
        - ./nginx/config:/etc/nginx/conf.d
+       - ./web-app/static:/static
      depends_on:
        - web
 volumes:
